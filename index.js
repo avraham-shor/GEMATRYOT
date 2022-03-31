@@ -1,16 +1,32 @@
-let gemOfTorah = {};
+let gemOfTorah = gemObject;
+// console.log(gemObject);
+// $.getJSON( "gematriot.js" )
+//   .done(function( json ) {
+//     console.log( "JSON Data: " );
+//   })
+//   .fail(function( jqxhr, textStatus, error ) {
+//     var err = textStatus + ", " + error;
+//     console.log( "Request Failed: " + err );
+// });
 
-CHUMASHIM.forEach(chumash => {
-    const CHUMASH = Object.keys(chumash)[0];
-    const range = chumash[CHUMASH]
-    for (let i = 0; i <= range; i++) {
-        getTora(BASE_URL + CHUMASH + i + PARAMS).then(data => {
-            data.json().then(perek => {
-                setListOfNumbersInTora(gemOfTorah, perek);
-            })
-        });
-    }
-})
+
+// getTora("gematriot.json")
+// .then(response => {
+//    return response.json();
+// })
+// .then(jsondata => console.log(jsondata));
+
+// CHUMASHIM.forEach(chumash => {
+//     const CHUMASH = Object.keys(chumash)[0];
+//     const range = chumash[CHUMASH]
+//     for (let i = 0; i <= range; i++) {
+//         getTora(BASE_URL + CHUMASH + i + PARAMS).then(data => {
+//             data.json().then(perek => {
+//                 setListOfNumbersInTora(gemOfTorah, perek);
+//             })
+//         });
+//     }
+// })
 
 
 function setGematrya(value) {
@@ -32,7 +48,8 @@ function setGematrya(value) {
 
 function setListOfNumbersInTora(gemOfTorah, perek) {
     if (perek.he) {
-        perek.he.forEach(e => {
+        perek.he.forEach((e, index) => {
+            const sourcePasuk = addIndexPasuk(index + 1);
             wordsOfPasuk = e.split(' ');
             for (let i = 0; i < wordsOfPasuk.length; i++) {
                 for (let j = i + 1; j <= wordsOfPasuk.length; j++) {
@@ -41,7 +58,7 @@ function setListOfNumbersInTora(gemOfTorah, perek) {
                         let word = words.join(' ');
                         word = clean(word);
                         let dict = {};
-                        dict[word] = perek.heRef;
+                        dict[word] = perek.heRef + sourcePasuk; 
                         if (!gemOfTorah[calculate(word)]) {
                             gemOfTorah[calculate(word)] = [];
                         }
@@ -53,16 +70,17 @@ function setListOfNumbersInTora(gemOfTorah, perek) {
                 }
             }
         });
-
-
-
-
-
-
-
     }
+}
 
-
+function addIndexPasuk(index) {
+    const some = index % 10;
+    const tens = index % 100 - some;
+    const hundreds = index - tens - some;
+    console.log(hundreds, tens, some);
+    console.log(VAL_OBVERSE[hundreds] + VAL_OBVERSE[tens] + VAL_OBVERSE[some]);
+    return ' ' + VAL_OBVERSE[hundreds] + VAL_OBVERSE[tens] + VAL_OBVERSE[some];
+    
 }
 
 function addToTheTable(sum) {
@@ -94,8 +112,7 @@ function addToTheTable(sum) {
 }
 
 function calculate(value) {
-    const val = { 'א': 1, 'ת': 400, 'ש': 300, 'ר': 200, 'ק': 100, 'ץ': 90, 'צ': 90, 'ף': 80, 'פ': 80, 'ע': 70, 'ס': 60, 'ן': 50, 'נ': 50, 'ם': 40, 'מ': 40, 'ל': 30, 'ך': 20, 'כ': 20, 'י': 10, 'ט': 9, 'ח': 8, 'ז': 7, 'ו': 6, 'ה': 5, 'ד': 4, 'ג': 3, 'ב': 2, }
-    return ('$$' + value).split('').map(c => val[c] || 0).reduce((a, b) => a + b);
+    return ('$$' + value).split('').map(c => VAL[c] || 0).reduce((a, b) => a + b);
 }
 
 async function getTora(url) {
