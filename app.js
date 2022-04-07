@@ -13,11 +13,11 @@ Object.keys(VAL).forEach(function (key) {
 });
 
 const gemOfTorah = {};
+getChumashimAndPrintFile(0);
 
-
-setTimeout(() => {
-    writeAFile()
-}, 200000);
+// setTimeout(() => {
+//     writeAFile()
+// }, 200000);
 
 // getTora(BASE_URL + CHUMASH + i + PARAMS).then(data => {
 //     data.json().then(perek => {
@@ -30,20 +30,51 @@ function writeAFile() {
     FS.writeFileSync("gematriot.json", ObjectJson);
 }
 
-CHUMASHIM.forEach(chumash => {
-    const CHUMASH = Object.keys(chumash)[0];
-    const range = chumash[CHUMASH]
-    for (let i = 0; i <= range; i++) {
-        axios.get(BASE_URL + CHUMASH + i + PARAMS).then(resp => {
-            setListOfNumbersInTora(gemOfTorah, resp.data);
-        });
+// for (let i = 0; i < CHUMASHIM.length; i++) {
+//     const chumash = CHUMASHIM[i];
+//     console.log(chumash);
+    
+//     console.log(CHUMASH);
+//     // const range = chumash[CHUMASH]
+//     // for (let i = 0; i <= range; i++) {
+//     //     axios.get(BASE_URL + CHUMASH + i + PARAMS).then(resp => {
+//     //         setListOfNumbersInTora(gemOfTorah, resp.data);
+//     //     });
+//     // }
+// }
+
+function getChumashimAndPrintFile(index) {
+    if (index >= CHUMASHIM.length) {
+        setTimeout(() => {
+                writeAFile()
+            }, 60000);
+            return;
     }
-});
+    const chumash = CHUMASHIM[index];
+    console.log('chumash', chumash);
+    const CHUMASH = Object.keys(chumash)[0];
+    const range = chumash[CHUMASH];
+    for (let i = 0; i <= range; i++) {
+            axios.get(BASE_URL + CHUMASH + i + PARAMS).then(resp => {
+                setTimeout(() => {
+                setListOfNumbersInTora(gemOfTorah, resp.data);
+            }, 500);
+            });
+        }
+        setTimeout(() => {
+            getChumashimAndPrintFile(index + 1)
+            }, 60000);
+}
+
+    
+
 
 
 function setListOfNumbersInTora(gemOfTorah, perek) {
     if (perek.he) {
+        console.log(perek.he.length);
         perek.he.forEach((e, index) => {
+            // console.log(e, index);
             const sourcePasuk = addIndexPasuk(index + 1);
             wordsOfPasuk = e.split(' ');
             for (let i = 0; i < wordsOfPasuk.length; i++) {
@@ -94,6 +125,8 @@ function clean(word) {
         return word.replace(/[a-z]|[0-9]|<|>|-|"|=|/g, "").replace("{ס}", "").replace("{פ}", "").replace("/", "").replace("|", "");
     }
 }
+
+
 
 
 

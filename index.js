@@ -1,6 +1,11 @@
 let gemOfTorah = gemObject;
+
+
 // console.log(gemObject);
-// $.getJSON( "gematriot.js" )
+// gemObject.forEach(n => {
+//     console.log(n);
+// });
+// $.getJSON( "gematriot.json" )
 //   .done(function( json ) {
 //     console.log( "JSON Data: " );
 //   })
