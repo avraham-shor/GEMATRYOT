@@ -13,6 +13,7 @@ Object.keys(VAL).forEach(function (key) {
 });
 
 const gemOfTorah = {};
+const arrayOfObjects = [];
 getChumashimAndPrintFile(0);
 
 // setTimeout(() => {
@@ -126,7 +127,14 @@ function clean(word) {
     }
 }
 
-
+function switchObject(result) {
+    for (let i = 1; i < 2000; i = i + 100) {
+        if (result < i) {
+           return arrayOfObjects[i]; 
+        }
+        
+    }
+}
 
 
 
