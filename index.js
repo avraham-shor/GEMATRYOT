@@ -41,6 +41,9 @@ function setGematrya(value) {
     localStorage.getItem('history') ? history = localStorage.getItem('history').split('%%') : [];
     history = history.filter((v, i) => history.indexOf(v) === i).sort();
     document.getElementById('history').innerText = history.filter(e => calculate(e) == sum && e != value);
+    if (document.getElementById('history').innerText.length < 1) {
+        document.getElementById('history').innerText = ' אין מילים שמתאימות לגימטריא זו';
+    }
     let cleanValue = clean(value);
     if (sum > 0 && value.length > 1) history.push(cleanValue);
     // console.log('history:', history);
